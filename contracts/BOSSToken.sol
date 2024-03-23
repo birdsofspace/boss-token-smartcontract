@@ -222,7 +222,7 @@ contract BOSSToken is Initializable {
      * @param   _to  The recipient address.
      * @param   _value  Value to be transferred.
      */
-    function _transfer(address _from, address _to, uint256 _value) internal {
+    function _transfer(address _from, address _to, uint256 _value) internal virtual {
         // Prevent transfer to 0x0 address. Use burn() instead
         require(_to != address(0));
         // Check if the sender has enough
@@ -281,7 +281,7 @@ contract BOSSToken is Initializable {
      * @param   _value  Amount of tokens to be transferred.
      * @return  success  If the transfer was successful.
      */
-    function transfer(address _to, uint256 _value) public returns (bool success) {
+    function transfer(address _to, uint256 _value) public virtual returns (bool success) {
         _transfer(msg.sender, _to, _value);
         return true;
     }
