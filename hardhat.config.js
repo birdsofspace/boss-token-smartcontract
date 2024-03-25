@@ -6,11 +6,12 @@ require("@openzeppelin/hardhat-upgrades");
 require("@nomiclabs/hardhat-etherscan");
 
 
+
 /** @type import('hardhat/config').HardhatUserConfig */
 
 const config = {
   mocha: {
-    timeout: 10000000000
+    timeout: 100000000000000
   },
   solidity: {
     compilers: [
