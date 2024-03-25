@@ -1,78 +1,22 @@
-// This is a script for deploying your contracts. You can adapt it to deploy
-// yours, or create new ones.
-
-const path = require("path");
+const { ethers, upgrades } = require("hardhat");
 
 async function main() {
-
-  const contractName = "BOSSToken";
-  // This is just a convenience check
-  if (network.name === "hardhat") {
-    console.warn(
-      "You are trying to deploy a contract to the Hardhat Network, which" +
-      "gets automatically created and destroyed every time. Use the Hardhat" +
-      " option '--network localhost'"
-    );
-  }
-
-  // ethers is available in the global scope
-  const [deployer] = await ethers.getSigners();
-  console.log(
-    "Deploying the contracts with the account:",
-    await deployer.getAddress()
+  //   const gas = await ethers.provider.getGasPrice();
+  const sample = await ethers.getContractFactory("BOSSToken");
+  console.log("Deploying BOSS...");
+  const v1contract = await upgrades.deployProxy(sample,[
+    "0x5b0AB9AFe2e5a6eA801fe93BF65478d5A2f8e903"
+  ]);
+  await v1contract.deployed();
+  console.log("Contract deployed to:", await v1contract.address);
+  const contract = sample.attach(
+    await v1contract.address
   );
-
-  console.log("Account balance:", (await deployer.getBalance()).toString());
-
-  const Token = await ethers.getContractFactory(contractName);
-  const token = await Token.deploy();
-  await token.deployed();
-
-  console.log("Token address:", token.address);
-
-  // We also save the contract's artifacts and address in the frontend directory
-  saveFrontendFiles(token);
+  console.log(await contract.setTeamAddress("0x8FAcCc9091E866052aE9462c152234cc7e61C946"))
+  console.log(await contract.setMarketingAddress("0x8FAcCc9091E866052aE9462c152234cc7e61C946"))
 }
 
-function saveFrontendFiles(token) {
-  const fs = require("fs");
-  const contractsDir = path.join(__dirname, "..", "frontend", "public");
-
-  if (!fs.existsSync(contractsDir)) {
-    fs.mkdirSync(contractsDir);
-  }
-  var smartContract = JSON.parse(
-    fs.readFileSync(path.join(contractsDir, "smartcontract.json"), "utf8")
-  );
-
-  const TokenArtifact = artifacts.readArtifactSync(contractName);
-  const abi = TokenArtifact.abi;
-  const contractAddress = token.address;
-  try {
-    smartContract.results.push({
-      json_abi: abi,
-      contract_address: contractAddress,
-      contract_name: contractName,
-    });
-  } catch (error) {
-    smartContract = {
-      results: [{
-        json_abi: abi,
-        contract_address: contractAddress,
-        contract_name: contractName,
-      }]
-    };
-  }
-
-  fs.writeFileSync(
-    path.join(contractsDir, "smartcontract.json"),
-    JSON.stringify(smartContract, null, 2)
-  );
-}
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
