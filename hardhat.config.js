@@ -74,7 +74,8 @@ const config = {
   networks: {
     truffle: {
       url: "http://localhost:24012/rpc",
-      allowUnlimitedContractSize:true,
+      allowUnlimitedContractSize: true,
+      timeout: 100000000000000
     }
   }
 }

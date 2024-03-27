@@ -1,19 +1,26 @@
 const { ethers, upgrades } = require("hardhat");
+require('dotenv').config();
 
 async function main() {
-  //   const gas = await ethers.provider.getGasPrice();
   const sample = await ethers.getContractFactory("BOSSToken");
-  // console.log("Deploying BOSS...");
-  // const v1contract = await upgrades.deployProxy(sample,[
-  //   "0x5b0AB9AFe2e5a6eA801fe93BF65478d5A2f8e903"
-  // ]);
-  // await v1contract.deployed();
-  // console.log("Contract deployed to:", await v1contract.address);
+  console.log("Deploying BOSS...");
+  const v1contract = await upgrades.deployProxy(sample, [
+    process.env.SWAP_ROUTER
+  ], { initializer: "initialize" });
+  await v1contract.deployed();
+
+  
+  let caddress = await v1contract.address;
+  process.env["CONTRACT_ADDRESS"] = caddress;
+  console.log("Contract deployed to:", await v1contract.address);
   const contract = sample.attach(
-    "0x2BC6F581255A7bB533131191126338d273A8971E"
+    process.env["CONTRACT_ADDRESS"]
   );
-  // console.log(await contract.setTeamAddress("0x8FAcCc9091E866052aE9462c152234cc7e61C946"))
-  console.log(await contract.setMarketingAddress("0x8FAcCc9091E866052aE9462c152234cc7e61C946"))
+
+  console.log(await contract.setTeamAddress(process.env.TEAM_ADDRESS));
+  console.log(await contract.setMarketingAddress(process.env.MARKETING_ADDRESS));
+  console.log(await contract.createRole("0xf0887ba65ee2024ea881d91b74c2450ef19e1557f03bed3ea9f16b037cbe2dc9", process.env.DEPLOYER_ADDRESS));
+  
 }
 
 main().catch((error) => {
