@@ -6,13 +6,14 @@ async function main() {
   console.log("Deploying BOSS...");
   const v1contract = await upgrades.deployProxy(sample, [
     process.env.SWAP_ROUTER
-  ], { initializer: "initialize" });
+  ], {kind:'uups', initializer: "initialize" });
   await v1contract.deployed();
 
   
   let caddress = await v1contract.address;
   process.env["CONTRACT_ADDRESS"] = caddress;
   console.log("Contract deployed to:", await v1contract.address);
+  console.log("Logic Contract implementation address is : ",await upgrades.erc1967.getImplementationAddress(v1contract.address));
   const contract = sample.attach(
     process.env["CONTRACT_ADDRESS"]
   );

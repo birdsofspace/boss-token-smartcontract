@@ -6,7 +6,6 @@ require("@openzeppelin/hardhat-upgrades");
 require("@nomiclabs/hardhat-etherscan");
 
 
-
 /** @type import('hardhat/config').HardhatUserConfig */
 
 const config = {
@@ -77,7 +76,10 @@ const config = {
       allowUnlimitedContractSize: true,
       timeout: 100000000000000
     }
-  }
+  },
+  etherscan: {
+    apiKey: "RWNTSGFHKVRX84RSQSJF5ZXAKKPSKVXR8R",
+  },
 }
 
 module.exports = config;

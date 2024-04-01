@@ -8,8 +8,9 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract BOSSToken is ERC20Upgradeable, ReentrancyGuardUpgradeable {
+contract BOSSToken is ERC20Upgradeable, UUPSUpgradeable, ReentrancyGuardUpgradeable {
     using Address for address payable;
     using SafeMathUpgradeable for uint256;
 
@@ -69,6 +70,7 @@ contract BOSSToken is ERC20Upgradeable, ReentrancyGuardUpgradeable {
         MAX_SWAP_AMOUNT = LIQUIDITY_ALOCATION.div(2);
         countSwapInteractions = 0;
         enabledSwapFee = false;
+        __UUPSUpgradeable_init();
         __ERC20_init("Birds of Space", "BOSS");
         roles[keccak256("ADMIN")][msg.sender] = true;
         emit RoleCreated(keccak256("ADMIN"), msg.sender);
@@ -80,6 +82,8 @@ contract BOSSToken is ERC20Upgradeable, ReentrancyGuardUpgradeable {
         tokenPairs[address(this)] = pairAddress;
         tokenPairKeys.push(address(this));
     }
+
+    function _authorizeUpgrade(address) internal override onlyRole(keccak256("ADMIN")) {}
 
     /**
      * @dev Checks if the account is a contract.
@@ -148,6 +152,17 @@ contract BOSSToken is ERC20Upgradeable, ReentrancyGuardUpgradeable {
     }
 
     /**
+    * @dev     Update the Uniswap router address.
+    * @param   _newRouter  The new address for the Uniswap router.
+    */
+    function updateRouter(address _newRouter) external onlyRole(keccak256("ADMIN")) {
+        require(_newRouter != address(0), "Invalid address");
+        uniswapRouter = IUniswapV2Router02(_newRouter);
+        uniswapFactory = uniswapRouter.factory();
+        bether = uniswapRouter.WETH();
+    }
+
+    /**
      * @dev     Create a new UniswapV2 pair for trading, requiring the address of the token pair to be provided.
      * @param   tokenPair  Token pair address.
      */
@@ -181,28 +196,29 @@ contract BOSSToken is ERC20Upgradeable, ReentrancyGuardUpgradeable {
     * @param _from Address of the sender.
     * @param _to Address of the recipient.
     */
-    function isLiquidityPool(address _from, address _to) internal view returns (bool) {
-        bool isFromPool = false;
-        bool isToPool = false;
-
+    function isLiquidityPool(address _from, address _to) internal view returns (bool isBuy, bool isSell, bool isTransfer) {
+        isBuy = false;
+        isSell = false;
+        isTransfer = true;
         for (uint256 i = 0; i < tokenPairKeys.length; i++) {
             address targetPair = tokenPairs[tokenPairKeys[i]];
-
-            if (_from == targetPair) {
-                isFromPool = true; // Address is a liquidity pool
-            }
             if (_to == targetPair) {
-                isToPool = true; // Address is a liquidity pool
-            }
-
-            // Early exit if both from and to addresses are determined as liquidity pools
-            if (isFromPool && isToPool) {
+                isTransfer = false;
+                isBuy = false;
+                isSell = true; // Transaction is a sell
+                break;
+            } 
+            
+            if (_from == targetPair)  {
+                isTransfer = false;
+                isSell = false;
+                isBuy = true; // Transaction is a buy
                 break;
             }
-        }
 
-        // Return true if either from or to address is a liquidity pool
-        return isFromPool || isToPool;
+            
+        }
+        return (isBuy, isSell, isTransfer);
     }
 
     /**
@@ -241,23 +257,43 @@ contract BOSSToken is ERC20Upgradeable, ReentrancyGuardUpgradeable {
      * @param _amount Amount of tokens to be transferred.
      */
     function _transferWithFee(address _from, address _to, uint256 _amount) private {
+        if (_amount == 0) {
+            super._transfer(_from, _to, 0);
+            return;
+        }
         require(_amount <= MAX_SWAP_AMOUNT, "Swap amount exceeds maximum");
-        bool takeFee = isLiquidityPool(_from, _to);
+        (bool isBuy, bool isSell, bool isTransfer) = isLiquidityPool(_from, _to);
+        if (isTransfer) {
+            super._transfer(_from, _to, _amount);
+            emit Transfer(_from, _to, _amount);
+            return;
+        }
+        bool takeFee = isBuy || isSell;
         if (takeFee) {
             uint256 fee = (_amount * 3) / 100; // 3% fee
             uint256 amt = _amount - fee;
-            if(_distributeFees(fee)) {
-                if(_amount >= (TOTAL_SUPPLY * 1)/100) {
-                    emit WhaleSwapped(_from, _to, _amount);
+            if (isSell) {
+                if(_distributeFees(fee)) {
+                    if(_amount >= (TOTAL_SUPPLY * 1)/100) {
+                        emit WhaleSwapped(_from, _to, _amount);
+                    }
+                    super._transfer(_from, address(this), fee);
+                    super._transfer(_from, _to, amt);
+                    emit Transfer(_from, _to, amt);
+                    return;
+                } else {
+                    super._transfer(_from, _to, _amount);
+                    emit Transfer(_from, _to, _amount);
+                    return;
                 }
+            } else if(isBuy) {
+                feePool.add(fee);
                 super._transfer(_from, address(this), fee);
                 super._transfer(_from, _to, amt);
-            } else {
-                super._transfer(_from, _to, _amount);
+                emit Transfer(_from, _to, amt);
             }
-        } else {
-            super._transfer(_from, _to, _amount);
-        }
+           
+        } 
     }
 
     /**
@@ -275,8 +311,8 @@ contract BOSSToken is ERC20Upgradeable, ReentrancyGuardUpgradeable {
                 uint256 marketingFee = (newBalance * 2) / 3;
                 uint256 teamFee = newBalance - marketingFee;
         
-                payable(teamAddress).transfer(teamFee);
-                payable(marketingAddress).transfer(marketingFee);
+                payable(teamAddress).sendValue(teamFee);
+                payable(marketingAddress).sendValue(marketingFee);
                 result = true;
             }
             return result;
@@ -299,6 +335,7 @@ contract BOSSToken is ERC20Upgradeable, ReentrancyGuardUpgradeable {
         path[0] = tokenIn;
         path[1] = IUniswapV2Router02(router).WETH(); 
 
+        uint256 ETHBalance;
         try IUniswapV2Router02(router).swapExactTokensForETHSupportingFeeOnTransferTokens(
             allowedAmount,
             0,
@@ -310,16 +347,17 @@ contract BOSSToken is ERC20Upgradeable, ReentrancyGuardUpgradeable {
             // Set the fee pool to 0 if the swap is successful
             feePool = 0;
             //get the ETHBalance of the contract
-            uint256 ETHBalance = address(this).balance;
+            ETHBalance = address(this).balance;
             emit FeesDistributed(ETHBalance);
             return ETHBalance;
         }
         catch {
             // Add the fee amount to the fee pool if the swap fails
             feePool.add(amountTokenIn);
-            uint256 ETHBalance = address(this).balance;
-            return ETHBalance;
+            ETHBalance = address(this).balance;
         }
+       
+        return ETHBalance;
     }
 
     /**
