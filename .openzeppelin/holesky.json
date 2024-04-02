@@ -669,6 +669,11 @@
       "address": "0xF5A76aBF50e424B6d3D9c3cC2335eD17e313078F",
       "txHash": "0x41be5829aeb23e62e80e318dfa69295784796798b53c7711171e6c9b5cd8dca9",
       "kind": "uups"
+    },
+    {
+      "address": "0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8",
+      "txHash": "0x9240772bb5916174b32df77d4e0b2a291f13beaa559d5714c2a1e93d2e2daec7",
+      "kind": "uups"
     }
   ],
   "impls": {
