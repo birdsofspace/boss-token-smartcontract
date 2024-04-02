@@ -8,6 +8,7 @@
     "deploy": "npx hardhat run scripts/deploy.js --network truffle",
     "igniton": "npx hardhat igniton deploy scripts/deploy.js --network truffle --verify",
     "mint": "npx hardhat run scripts/mint.js --network truffle",
+    "test1": "npx hardhat run tests/functional.test.js --network truffle",
     "enabled-swap": "npx hardhat run scripts/deploy.js --network truffle",
     "truffle-dashboard": "truffle dashboard",
     "flatten": "npx hardhat flatten contracts/BOSSToken.sol > contracts/BOSSTokenFlatten.sol"

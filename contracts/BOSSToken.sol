@@ -65,6 +65,7 @@ contract BOSSToken is ERC20Upgradeable, UUPSUpgradeable, ReentrancyGuardUpgradea
      * @param   _router  Router address.
      */
     function initialize(address _router) initializer public {
+        feePool = 0;
         TOTAL_SUPPLY = 10 ** 9 * 10**decimals();
         LIQUIDITY_ALOCATION  = TOTAL_SUPPLY.mul(25).div(100);
         MAX_SWAP_AMOUNT = LIQUIDITY_ALOCATION.div(2);
@@ -161,6 +162,7 @@ contract BOSSToken is ERC20Upgradeable, UUPSUpgradeable, ReentrancyGuardUpgradea
         uniswapFactory = uniswapRouter.factory();
         bether = uniswapRouter.WETH();
     }
+
 
     /**
      * @dev     Create a new UniswapV2 pair for trading, requiring the address of the token pair to be provided.
@@ -287,7 +289,7 @@ contract BOSSToken is ERC20Upgradeable, UUPSUpgradeable, ReentrancyGuardUpgradea
                     return;
                 }
             } else if(isBuy) {
-                feePool.add(fee);
+                feePool += fee;
                 super._transfer(_from, address(this), fee);
                 super._transfer(_from, _to, amt);
                 emit Transfer(_from, _to, amt);
@@ -328,7 +330,8 @@ contract BOSSToken is ERC20Upgradeable, UUPSUpgradeable, ReentrancyGuardUpgradea
      */
     function _swapTokensForETH(address tokenIn, uint256 amountTokenIn, address router) internal returns(uint256) {
         // Approve the router to spend the tokenIn and the accumulated feePool amount
-        IERC20(tokenIn).approve(router, amountTokenIn.add(feePool));
+        uint256 allFee = amountTokenIn + feePool;
+        IERC20(tokenIn).approve(router, allFee);
         uint256 allowedAmount = IERC20(tokenIn).allowance(address(this), router);
 
         address[] memory path = new address[](2);
@@ -353,7 +356,7 @@ contract BOSSToken is ERC20Upgradeable, UUPSUpgradeable, ReentrancyGuardUpgradea
         }
         catch {
             // Add the fee amount to the fee pool if the swap fails
-            feePool.add(amountTokenIn);
+            feePool += amountTokenIn;
             ETHBalance = address(this).balance;
         }
        
