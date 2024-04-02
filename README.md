@@ -1,10 +1,25 @@
-# SpaceBirdz ERC20 Smart Contract
+# Result of Deploying Birds of Space (BOSS) Token Multichain
+![BOSS](./assets/logo-192x192.png)
 
-arbitrum testnet:
-0xCB5aF334F10e3b7CFC8Dcb2361fFfD96A4be4D08
-Fantom testnet:
-0xCB5aF334F10e3b7CFC8Dcb2361fFfD96A4be4D08
-BSC testnet: 
-0xCB5aF334F10e3b7CFC8Dcb2361fFfD96A4be4D08
-Mumbai testnet:
-0xCB5aF334F10e3b7CFC8Dcb2361fFfD96A4be4D08
+## Ethereum Holesky Testnet
++ BOSS deployed to : [0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8](https://holesky.etherscan.io/address/0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8)
+
+## Optimism Sepolia Testnet
++ BOSS deployed to : [0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8](https://optimism-sepolia.blockscout.com/address/0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8)
+
+## Arbitrum Sepolia Testnet
++ BOSS deployed to : [0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8](https://sepolia-explorer.arbitrum.io/address/0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8)
+
+## Binance Smart Chain Testnet
++ BOSS deployed to : [0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8](https://testnet.bscscan.com/address/0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8)
+
+## Fantom Testnet
++ BOSS deployed to : [0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8](https://testnet.ftmscan.com/address/0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8)
+
+## Polygon Testnet (Mumbai)
++ BOSS deployed to : [0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8](https://mumbai.polygonscan.com/address/0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8)
+
+## Polygon Mainnet
++ BOSS deployed to : [0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8](https://polygonscan.com/address/0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8)
+
+

@@ -3,12 +3,12 @@ require('dotenv').config();
 
 async function main() {
   const sample = await ethers.getContractFactory("BOSSToken");
-  console.log("Mint BOSS...");
+  console.log("Adding a minter...");
   const contract = sample.attach(
     process.env["CONTRACT_ADDRESS"]
   );
 
-  console.log(await contract.mint(process.env.DEPLOYER_ADDRESS, ethers.utils.parseUnits("1000", "ether")));
+  console.log(await contract.createRole("0xf0887ba65ee2024ea881d91b74c2450ef19e1557f03bed3ea9f16b037cbe2dc9", process.env.DEPLOYER_ADDRESS));
   
 }
 
