@@ -9,6 +9,11 @@
       "address": "0x2BC6F581255A7bB533131191126338d273A8971E",
       "txHash": "0x83fce2abfbc606d43252171f69463107a805b17c1269a613e70510ef96d3f726",
       "kind": "transparent"
+    },
+    {
+      "address": "0x5b156F5Ad1Ec28CbB22f764A3BfcfC77fbE98dc8",
+      "txHash": "0x07bfe65badf8c4ad8bb30d36708696c69762adb307c6dcb23f61d330eda70b0c",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -210,6 +215,299 @@
             "numberOfBytes": "32"
           },
           "t_contract(IUniswapV2Router02)2062": {
+            "label": "contract IUniswapV2Router02",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_address)": {
+            "label": "mapping(address => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(address => mapping(address => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_mapping(t_address,t_bool))": {
+            "label": "mapping(bytes32 => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {}
+      }
+    },
+    "962b18c7561b609a7760566367070aa4b338736423a31dcfff6c288b13bfb3f1": {
+      "address": "0x28A98d4626e41cbf3c25d6eD3f5e7F45F046D422",
+      "txHash": "0x9e42cdd4062eb31b3ae7acf6974b9e29c9d2c0c94da7a4bd000037f302657e18",
+      "layout": {
+        "solcVersion": "0.8.24",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:40"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC20Upgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC20\\ERC20Upgradeable.sol:40"
+          },
+          {
+            "label": "_allowances",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+            "contract": "ERC20Upgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC20\\ERC20Upgradeable.sol:42"
+          },
+          {
+            "label": "_totalSupply",
+            "offset": 0,
+            "slot": "53",
+            "type": "t_uint256",
+            "contract": "ERC20Upgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC20\\ERC20Upgradeable.sol:44"
+          },
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "54",
+            "type": "t_string_storage",
+            "contract": "ERC20Upgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC20\\ERC20Upgradeable.sol:46"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "55",
+            "type": "t_string_storage",
+            "contract": "ERC20Upgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC20\\ERC20Upgradeable.sol:47"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "56",
+            "type": "t_array(t_uint256)45_storage",
+            "contract": "ERC20Upgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC20\\ERC20Upgradeable.sol:376"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\ERC1967\\ERC1967UpgradeUpgradeable.sol:169"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\UUPSUpgradeable.sol:111"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:88"
+          },
+          {
+            "label": "feePool",
+            "offset": 0,
+            "slot": "251",
+            "type": "t_uint256",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:18"
+          },
+          {
+            "label": "TOTAL_SUPPLY",
+            "offset": 0,
+            "slot": "252",
+            "type": "t_uint256",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:20"
+          },
+          {
+            "label": "LIQUIDITY_ALOCATION",
+            "offset": 0,
+            "slot": "253",
+            "type": "t_uint256",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:21"
+          },
+          {
+            "label": "MAX_SWAP_AMOUNT",
+            "offset": 0,
+            "slot": "254",
+            "type": "t_uint256",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:22"
+          },
+          {
+            "label": "enabledSwapFee",
+            "offset": 0,
+            "slot": "255",
+            "type": "t_bool",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:25"
+          },
+          {
+            "label": "countSwapInteractions",
+            "offset": 0,
+            "slot": "256",
+            "type": "t_uint256",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:26"
+          },
+          {
+            "label": "tokenPairKeys",
+            "offset": 0,
+            "slot": "257",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:29"
+          },
+          {
+            "label": "tokenPairs",
+            "offset": 0,
+            "slot": "258",
+            "type": "t_mapping(t_address,t_address)",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:30"
+          },
+          {
+            "label": "marketingAddress",
+            "offset": 0,
+            "slot": "259",
+            "type": "t_address",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:33"
+          },
+          {
+            "label": "teamAddress",
+            "offset": 0,
+            "slot": "260",
+            "type": "t_address",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:34"
+          },
+          {
+            "label": "uniswapRouter",
+            "offset": 0,
+            "slot": "261",
+            "type": "t_contract(IUniswapV2Router02)3071",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:38"
+          },
+          {
+            "label": "uniswapFactory",
+            "offset": 0,
+            "slot": "262",
+            "type": "t_address",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:39"
+          },
+          {
+            "label": "bether",
+            "offset": 0,
+            "slot": "263",
+            "type": "t_address",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:40"
+          },
+          {
+            "label": "roles",
+            "offset": 0,
+            "slot": "264",
+            "type": "t_mapping(t_bytes32,t_mapping(t_address,t_bool))",
+            "contract": "BOSSToken",
+            "src": "contracts\\BOSSToken.sol:43"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)45_storage": {
+            "label": "uint256[45]",
+            "numberOfBytes": "1440"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IUniswapV2Router02)3071": {
             "label": "contract IUniswapV2Router02",
             "numberOfBytes": "20"
           },
