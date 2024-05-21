@@ -10,7 +10,8 @@
     "mint": "npx hardhat run scripts/mint.js --network truffle",
     "add-minter": "npx hardhat run scripts/addMinter.js --network truffle",
     "test1": "npx hardhat run tests/functional.test.js --network truffle",
-    "enabled-swap": "npx hardhat run scripts/deploy.js --network truffle",
+    "enabled-swap-fee": "npx hardhat run scripts/enabledSwapFee.js --network truffle",
+    "disabled-swap-fee": "npx hardhat run scripts/disabledSwapFee.js --network truffle",
     "truffle-dashboard": "truffle dashboard",
     "flatten": "npx hardhat flatten contracts/BOSSToken.sol > contracts/BOSSTokenFlatten.sol"
   },
