@@ -375,3 +375,97 @@ contract BOSSToken is ERC20Upgradeable, UUPSUpgradeable, ReentrancyGuardUpgradea
 
     receive() external payable {}
 }
+
+contract BOSSTokenV2 is BOSSToken {
+    uint256 public buyTaxRate;
+    uint256 public sellTaxRate;
+    bool public buyPaused;
+    bool public sellPaused;
+
+
+    function setBuyTaxRate(uint256 _buyTaxRate) external onlyRole(keccak256("ADMIN")) {
+        require(_buyTaxRate <= 10000, "Tax rate too high"); // Max 100% tax rate
+        buyTaxRate = _buyTaxRate;
+    }
+
+    function setSellTaxRate(uint256 _sellTaxRate) external onlyRole(keccak256("ADMIN")) {
+        require(_sellTaxRate <= 10000, "Tax rate too high"); // Max 100% tax rate
+        sellTaxRate = _sellTaxRate;
+    }
+
+    function _transfer(address _from, address _to, uint256 _amount) internal virtual override {
+        if (_from == address(this) || !enabledSwapFee) {
+            _transferNoFee(_from, _to, _amount);
+            if (countSwapInteractions == 0) {
+                enabledSwapFee = true;
+                countSwapInteractions += 1;
+            }
+        } else {
+            _transferWithFeeV2(_from, _to, _amount);
+            countSwapInteractions += 1;
+        }
+    }
+
+    function _transferWithFeeV2(address _from, address _to, uint256 _amount) private {
+        if (_amount == 0) {
+            super._transfer(_from, _to, 0);
+            return;
+        }
+        require(_amount <= MAX_SWAP_AMOUNT, "Swap amount exceeds maximum");
+        (bool isBuy, bool isSell, bool isTransfer) = isLiquidityPool(_from, _to);
+
+        if (isBuy) {
+            require(!buyPaused, "Buy transactions are paused");
+        }
+        
+        if (isSell) {
+            require(!sellPaused, "Sell transactions are paused");
+        }
+
+        if (isTransfer) {
+            super._transfer(_from, _to, _amount);
+            return;
+        }
+        bool takeFee = isBuy || isSell;
+        if (takeFee) {
+            uint256 feeRate = isSell ? sellTaxRate : buyTaxRate;
+            uint256 fee = (_amount * feeRate) / 10000; // Convert basis points to percentage
+            uint256 amt = _amount - fee;
+            if (isSell) {
+                if(_distributeFees(fee)) {
+                    if(_amount >= (TOTAL_SUPPLY * 1)/100) {
+                        emit WhaleSwapped(_from, _to, _amount);
+                    }
+                    super._transfer(_from, address(this), fee);
+                    super._transfer(_from, _to, amt);
+                    return;
+                } else {
+                    super._transfer(_from, _to, _amount);
+                    return;
+                }
+            } else if(isBuy) {
+                feePool += fee;
+                super._transfer(_from, address(this), fee);
+                super._transfer(_from, _to, amt);
+            }
+        }
+    }
+
+    function pauseBuy() external onlyRole(keccak256("ADMIN")) {
+        buyPaused = true;
+    }
+
+    function unpauseBuy() external onlyRole(keccak256("ADMIN")) {
+        buyPaused = false;
+    }
+
+    function pauseSell() external onlyRole(keccak256("ADMIN")) {
+        sellPaused = true;
+    }
+
+    function unpauseSell() external onlyRole(keccak256("ADMIN")) {
+        sellPaused = false;
+    }
+
+
+}
