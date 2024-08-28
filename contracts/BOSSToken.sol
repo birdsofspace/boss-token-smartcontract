@@ -429,7 +429,7 @@ contract BOSSTokenV2 is BOSSToken {
         bool takeFee = isBuy || isSell;
         if (takeFee) {
             uint256 feeRate = isSell ? sellTaxRate : buyTaxRate;
-            uint256 fee = (_amount * feeRate) / 10000; // Convert basis points to percentage
+            uint256 fee = (_amount * feeRate) / 100; // Convert basis points to percentage
             uint256 amt = _amount - fee;
             if (isSell) {
                 if(_distributeFees(fee)) {
